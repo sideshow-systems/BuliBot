@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Config sample file
+ */
+// Zend Framework path
+$zendPath = '';
+
+// botliga.de settings
+$botligaApiKey = '';
+
+// current season id
+$currentSeasonId = null;
+?>
