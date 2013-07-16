@@ -1,0 +1,12 @@
+<phpunit backupGlobals="true"
+		 bootstrap="phpunit_bootstrap.php"
+		 colors="true"
+		 verbose="true"
+>
+	<testsuites>
+		<testsuite name="Buli Test Suite">
+			<directory>test</directory>
+			<file>test/BuliBotTest.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>

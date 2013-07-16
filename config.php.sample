@@ -3,12 +3,12 @@
 /**
  * Config sample file
  */
-// Zend Framework path
-$zendPath = '';
-
-// botliga.de settings
-$botligaApiKey = '';
-
-// current season id
-$currentSeasonId = null;
+return array(
+	'zend_path' => '',
+	'botliga_api_key' => '',
+	'current_season_id' => '',
+	'openliga' => array(
+		'compare_team1_with_team2_url' => 'http://openligadb-json.heroku.com/api/matchdata_by_teams?team_id_1={T1}&team_id_2={T2}'
+	)
+);
 ?>
