@@ -1,3 +1,4 @@
 /nbproject/*
 config.php
 cache/*
+.DS_Store
