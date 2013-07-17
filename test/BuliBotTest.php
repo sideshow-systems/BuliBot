@@ -55,6 +55,27 @@ class BuliBotTest extends PHPUnit_Framework_TestCase {
 		$cache->remove($cacheId);
 	}
 
+	public function testJustAGetAndConvertTest() {
+		$cacheId = 'test123';
+		$cache = $this->buliBot->getCache();
+
+		$cacheData = null;
+		if (!$cache->load($cacheId)) {
+			$client = new Zend_Http_Client('http://openligadb-json.heroku.com/api/matchdata_by_teams?team_id_1=100&team_id_2=134', array(
+				'maxredirects' => 0,
+				'timeout' => 30));
+
+			$response = $client->request('GET');
+			$cacheData = $response->getBody();
+			$cache->save($cacheData, $cacheId);
+		} else {
+			$cacheData = $cache->load($cacheId);
+		}
+
+		$phpNative = Zend_Json::decode($cacheData);
+		Zend_Debug::dump($phpNative);
+	}
+
 }
 
 ?>
