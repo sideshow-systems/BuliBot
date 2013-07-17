@@ -19,16 +19,14 @@ class BuliBotTest extends PHPUnit_Framework_TestCase {
 	 * Setup method
 	 */
 	protected function setUp() {
-		$this->buliBot = new BuliBot();
+		$this->buliBot = new BuliBot($_SERVER['config']);
 	}
 
-	public function testEmpty() {
-		$stack = array();
-		$this->assertEmpty($stack);
-
-		Zend_Debug::dump($this->buliBot);
-
-		return $stack;
+	/**
+	 * Test that the config member is not empty
+	 */
+	public function testConfigMemberIsNotEmpty() {
+		$this->assertNotEmpty($this->buliBot->getConfig());
 	}
 
 }

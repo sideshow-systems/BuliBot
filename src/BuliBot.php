@@ -10,7 +10,32 @@
  * @author Florian Binder <fb@sideshow-systems.de>
  */
 class BuliBot {
-	//put your code here
+
+	/**
+	 * Holds config data
+	 *
+	 * @var array
+	 */
+	private $config = array();
+
+	/**
+	 * Constructor
+	 *
+	 * @param array $config
+	 */
+	public function __construct($config) {
+		$this->config = $config;
+	}
+
+	/**
+	 * Get config
+	 *
+	 * @return array
+	 */
+	public function getConfig() {
+		return $this->config;
+	}
+
 }
 
 ?>
