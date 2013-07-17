@@ -29,6 +29,32 @@ class BuliBotTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotEmpty($this->buliBot->getConfig());
 	}
 
+	/**
+	 * Test get zend cache object
+	 */
+	public function testGetCache() {
+		$this->assertInstanceOf('Zend_Cache_Core', $this->buliBot->getCache());
+	}
+
+	/**
+	 * Minor cache test (read and write)
+	 */
+	public function testCacheWriteAndRead() {
+		$testData = array(1, 2, 3, 4, array('mep1' => 1, 'mep2' => 2));
+		$cacheId = 'ut_testCacheWriteAndRead';
+
+		// Write data to cache
+		$cache = $this->buliBot->getCache();
+		$cache->save($testData, $cacheId);
+
+		// Check
+		$cachedData = $cache->load($cacheId);
+		$this->assertEquals($testData, $cachedData);
+
+		// Delete
+		$cache->remove($cacheId);
+	}
+
 }
 
 ?>
