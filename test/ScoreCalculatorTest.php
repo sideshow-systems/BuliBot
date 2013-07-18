@@ -74,12 +74,55 @@ class ScoreCalculatorTest extends PHPUnit_Framework_TestCase {
 		$expected = array(
 			1 => array(
 				ScoreCalculator::KEYS_VICTORIES => $statData
-			),
-			2 => array()
+			)
 		);
 
 		$this->scoreCalculator->setStatisticData(1, ScoreCalculator::KEYS_VICTORIES, $statData);
 		$this->assertEquals($expected, $this->scoreCalculator->getStatisticData());
+	}
+
+	/**
+	 * Test get stat data by team id and key
+	 *
+	 * @covers ScoreCalculator::setStatisticData
+	 * @covers ScoreCalculator::getStatisticDataByTeamIdAndKey
+	 */
+	public function testGetStatDataByTeamIdAndKey() {
+		$statData = 300;
+
+		$this->scoreCalculator->setStatisticData(1, ScoreCalculator::KEYS_VICTORIES, $statData);
+		$this->assertEquals($statData, $result = $this->scoreCalculator->getStatisticDataByTeamIdAndKey(1, ScoreCalculator::KEYS_VICTORIES));
+	}
+
+	/**
+	 * Test generating statistic data with empty data
+	 *
+	 * @covers ScoreCalculator::generateStatisticData
+	 * @expectedException Exception
+	 */
+	public function testGenerateStatisticDataWithEmptyMatchData() {
+		$this->scoreCalculator->generateStatisticData();
+	}
+
+	/**
+	 * Test generating statistic data
+	 *
+	 * @covers ScoreCalculator::generateStatisticData
+	 */
+	public function testGenerateStatisticData() {
+		// Set teams
+		$teamId1 = 40; // FCB
+		$teamId2 = 7; // BVB
+		$this->scoreCalculator->setTeamId1($teamId1);
+		$this->scoreCalculator->setTeamId2($teamId2);
+
+		// Set matchdata
+		$matchdata = $this->getMatchdataFCBvsBVB();
+		$this->scoreCalculator->setMatchData($matchdata);
+		$this->scoreCalculator->generateStatisticData();
+
+		$result = $this->scoreCalculator->getStatisticData();
+		Zend_Debug::dump($result);
 	}
 
 }

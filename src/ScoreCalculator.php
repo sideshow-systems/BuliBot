@@ -10,6 +10,7 @@ class ScoreCalculator extends BuliBot {
 	const KEYS_VICTORIES = 'victories';
 	const KEYS_DEFEATS = 'defeats';
 	const KEYS_TIED = 'tied';
+	const KEYS_POINTS = 'points';
 
 	/**
 	 * Team id of team 1
@@ -37,10 +38,7 @@ class ScoreCalculator extends BuliBot {
 	 *
 	 * @var array
 	 */
-	private $statData = array(
-		1 => array(),
-		2 => array()
-	);
+	private $statData = array();
 
 	/**
 	 * Constructor
@@ -107,12 +105,24 @@ class ScoreCalculator extends BuliBot {
 
 	/**
 	 *
-	 * @param int $team
+	 * @param int $teamId
 	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function setStatisticData($team, $key, $value) {
-		$this->statData[$team][$key] = $value;
+	public function setStatisticData($teamId, $key, $value) {
+		$this->statData[$teamId][$key] = $value;
+	}
+
+	/**
+	 * Get data by team id and key
+	 *
+	 * @param int $teamId
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function getStatisticDataByTeamIdAndKey($teamId, $key) {
+		return $this->statData[$teamId][$key];
 	}
 
 	/**
@@ -122,6 +132,29 @@ class ScoreCalculator extends BuliBot {
 	 */
 	public function getStatisticData() {
 		return $this->statData;
+	}
+
+	/**
+	 * Generate statistic data
+	 */
+	public function generateStatisticData() {
+		if (empty($this->matchdata)) {
+			throw new Exception('No matchdata is set!', 3000);
+		}
+
+//		Zend_Debug::dump($this->matchdata);
+		$matchdata = $this->matchdata['matchdata'];
+		if (!empty($matchdata)) {
+
+			// Now we're dealing with a single match
+			foreach ($matchdata as $match) {
+				if ($match['match_is_finished']) {
+					Zend_Debug::dump($match);
+					// Get data for team1
+					// Count points
+				}
+			}
+		}
 	}
 
 }
