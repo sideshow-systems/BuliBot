@@ -73,7 +73,7 @@ class BuliBotTest extends PHPUnit_Framework_TestCase {
 		}
 
 		$phpNative = Zend_Json::decode($cacheData);
-		Zend_Debug::dump($phpNative);
+//		Zend_Debug::dump($phpNative);
 	}
 
 }

@@ -7,6 +7,7 @@
 		<testsuite name="Buli Test Suite">
 			<directory>test</directory>
 			<file>test/BuliBotTest.php</file>
+			<file>test/ScoreCalculator.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
