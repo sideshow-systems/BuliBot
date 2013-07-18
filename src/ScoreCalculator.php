@@ -7,6 +7,10 @@
  */
 class ScoreCalculator extends BuliBot {
 
+	const KEYS_VICTORIES = 'victories';
+	const KEYS_DEFEATS = 'defeats';
+	const KEYS_TIED = 'tied';
+
 	/**
 	 * Team id of team 1
 	 *
@@ -27,6 +31,16 @@ class ScoreCalculator extends BuliBot {
 	 * @var array
 	 */
 	private $matchdata = array();
+
+	/**
+	 * Store statistics data
+	 *
+	 * @var array
+	 */
+	private $statData = array(
+		1 => array(),
+		2 => array()
+	);
 
 	/**
 	 * Constructor
@@ -89,6 +103,25 @@ class ScoreCalculator extends BuliBot {
 	 */
 	public function getMatchData() {
 		return $this->matchdata;
+	}
+
+	/**
+	 *
+	 * @param int $team
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function setStatisticData($team, $key, $value) {
+		$this->statData[$team][$key] = $value;
+	}
+
+	/**
+	 * Get statistic data
+	 *
+	 * @return array
+	 */
+	public function getStatisticData() {
+		return $this->statData;
 	}
 
 }

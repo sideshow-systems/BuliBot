@@ -63,6 +63,25 @@ class ScoreCalculatorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($matchdata, $this->scoreCalculator->getMatchData());
 	}
 
+	/**
+	 * Test get stat data
+	 *
+	 * @covers ScoreCalculator::setStatisticData
+	 * @covers ScoreCalculator::getStatisticData
+	 */
+	public function testGetStatData() {
+		$statData = 300;
+		$expected = array(
+			1 => array(
+				ScoreCalculator::KEYS_VICTORIES => $statData
+			),
+			2 => array()
+		);
+
+		$this->scoreCalculator->setStatisticData(1, ScoreCalculator::KEYS_VICTORIES, $statData);
+		$this->assertEquals($expected, $this->scoreCalculator->getStatisticData());
+	}
+
 }
 
 ?>
