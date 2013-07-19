@@ -9,7 +9,7 @@ class ScoreCalculator extends BuliBot {
 
 	const KEYS_VICTORIES = 'victories';
 	const KEYS_DEFEATS = 'defeats';
-	const KEYS_TIED = 'tied';
+	const KEYS_TIES = 'tied';
 	const KEYS_POINTS = 'points';
 
 	/**
@@ -142,6 +142,16 @@ class ScoreCalculator extends BuliBot {
 			throw new Exception('No matchdata is set!', 3000);
 		}
 
+		// Initialize some values
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_POINTS, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_POINTS, 0);
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_VICTORIES, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_VICTORIES, 0);
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_DEFEATS, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_DEFEATS, 0);
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TIES, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TIES, 0);
+
 //		Zend_Debug::dump($this->matchdata);
 		$matchdata = $this->matchdata['matchdata'];
 		if (!empty($matchdata)) {
@@ -150,11 +160,48 @@ class ScoreCalculator extends BuliBot {
 			foreach ($matchdata as $match) {
 				if ($match['match_is_finished']) {
 					Zend_Debug::dump($match);
-					// Get data for team1
+					// Map team ids and generate keys
+					if ($match['id_team1'] == $this->teamId1) {
+						$teamId1Key = 1;
+						$teamId2Key = 2;
+					} else {
+						$teamId1Key = 2;
+						$teamId2Key = 1;
+					}
+
+//					Zend_Debug::dump('teamId1: ' . $this->teamId1 . ' - ' . $match['name_team' . $teamId1Key]);
+//					Zend_Debug::dump('teamId2: ' . $this->teamId2 . ' - ' . $match['name_team' . $teamId2Key]);
 					// Count points
+					$matchPointsTeam1 = $match['points_team' . $teamId1Key];
+					$cntPointsTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_POINTS) + $matchPointsTeam1;
+					$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_POINTS, $cntPointsTeam1);
+
+					$matchPointsTeam2 = $match['points_team' . $teamId2Key];
+					$cntPointsTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_POINTS) + $matchPointsTeam2;
+					$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_POINTS, $cntPointsTeam2);
+
+					// Count victories, defeats and ties
+					if ($matchPointsTeam1 > $matchPointsTeam2) {
+						$cntVictoriesTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_VICTORIES) + 1;
+						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_VICTORIES, $cntVictoriesTeam1);
+						$cntDefeatsTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_DEFEATS) + 1;
+						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_DEFEATS, $cntDefeatsTeam2);
+					} else if ($matchPointsTeam1 < $matchPointsTeam2) {
+						$cntVictoriesTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_VICTORIES) + 1;
+						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_VICTORIES, $cntVictoriesTeam2);
+						$cntDefeatsTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_DEFEATS) + 1;
+						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_DEFEATS, $cntDefeatsTeam1);
+					} else if ($matchPointsTeam1 == $matchPointsTeam2) {
+						$cntTiesTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_TIES) + 1;
+						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TIES, $cntTiesTeam1);
+						$cntTiesTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_TIES) + 1;
+						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TIES, $cntTiesTeam2);
+					}
 				}
 			}
 		}
+
+//		Zend_Debug::dump($this->getStatisticData());
 	}
 
 }
