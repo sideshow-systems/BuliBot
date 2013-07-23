@@ -122,7 +122,7 @@ class ScoreCalculatorTest extends PHPUnit_Framework_TestCase {
 		$this->scoreCalculator->generateStatisticData();
 
 		$result = $this->scoreCalculator->getStatisticData();
-		Zend_Debug::dump($result);
+//		Zend_Debug::dump($result);
 	}
 
 }

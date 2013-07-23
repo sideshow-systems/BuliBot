@@ -8,7 +8,8 @@ return array(
 	'botliga_api_key' => '53mxi3nd8q7v06jtijoe0sho',
 	'current_season_id' => '',
 	'openliga' => array(
-		'compare_team1_with_team2_url' => 'http://openligadb-json.heroku.com/api/matchdata_by_teams?team_id_1={T1}&team_id_2={T2}'
+		'compare_team1_with_team2_url' => 'http://openligadb-json.heroku.com/api/matchdata_by_teams?team_id_1={T1}&team_id_2={T2}',
+		'get_matches_for_playday' => 'http://openligadb-json.heroku.com/api/matchdata_by_group_league_saison?league_saison={T1}&league_shortcut={T2}&group_order_id={T3}'
 	)
 );
 ?>

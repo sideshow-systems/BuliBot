@@ -36,4 +36,13 @@ $dr = $opts->getOption('d');
 
 // BuliBot instance
 $buliBot = new BuliBot($config);
+
+// Set options
+$buliBot->setPlayday($pd);
+if (!empty($dr)) {
+	$buliBot->setDryrun($dr);
+}
+
+// Get matches by playday
+$buliBot->getMatchesByPlayday($pd);
 ?>

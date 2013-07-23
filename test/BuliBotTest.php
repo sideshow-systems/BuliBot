@@ -69,6 +69,21 @@ class BuliBotTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Test url string replacer
+	 */
+	public function testUrlStringReplacer() {
+		$urlKey1 = 'get_matches_for_playday';
+		$valuesSet1 = array(
+			'{T1}' => 2013,
+			'{T2}' => 'bl1',
+			'{T3}' => 3
+		);
+		$result1 = $this->buliBot->urlStringReplacer($urlKey1, $valuesSet1);
+		$expected = 'http://openligadb-json.heroku.com/api/matchdata_by_group_league_saison?league_saison=2013&league_shortcut=bl1&group_order_id=3';
+		$this->assertEquals($expected, $result1);
+	}
+
+	/**
 	 * Setter and getter dryrun member
 	 *
 	 * @covers BuliBot::setDryrun

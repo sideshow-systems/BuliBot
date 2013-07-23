@@ -166,7 +166,7 @@ class ScoreCalculator extends BuliBot {
 			// Now we're dealing with a single match
 			foreach ($matchdata as $match) {
 				if ($match['match_is_finished']) {
-					Zend_Debug::dump($match);
+//					Zend_Debug::dump($match);
 					// Map team ids and generate keys
 					if ($match['id_team1'] == $this->teamId1) {
 						$teamId1Key = 1;
