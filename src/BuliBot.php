@@ -26,6 +26,20 @@ class BuliBot {
 	private $cache = null;
 
 	/**
+	 * Playday
+	 *
+	 * @var int
+	 */
+	private $playday = 0;
+
+	/**
+	 * Dryrun
+	 *
+	 * @var bool
+	 */
+	private $dryrun = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @param array $config
@@ -65,6 +79,42 @@ class BuliBot {
 	 */
 	public function getCache() {
 		return $this->cache;
+	}
+
+	/**
+	 * Set playday
+	 *
+	 * @param int $pd
+	 */
+	public function setPlayday($pd) {
+		$this->playday = $pd;
+	}
+
+	/**
+	 * Get playday
+	 *
+	 * @return int
+	 */
+	public function getPlayday() {
+		return $this->playday;
+	}
+
+	/**
+	 * Set dryrun
+	 *
+	 * @param bool $dr
+	 */
+	public function setDryrun($dr) {
+		$this->dryrun = $dr;
+	}
+
+	/**
+	 * Get dryrun
+	 *
+	 * @return bool
+	 */
+	public function getDryrun() {
+		return $this->dryrun;
 	}
 
 }

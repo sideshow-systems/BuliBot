@@ -55,6 +55,32 @@ class BuliBotTest extends PHPUnit_Framework_TestCase {
 		$cache->remove($cacheId);
 	}
 
+	/**
+	 * Setter and getter playday member
+	 *
+	 * @covers BuliBot::setPlayday
+	 * @covers BuliBot::getPlayday
+	 */
+	public function testSetterAndGetterPlayday() {
+		$playday = 3;
+
+		$this->buliBot->setPlayday($playday);
+		$this->assertEquals($playday, $this->buliBot->getPlayday());
+	}
+
+	/**
+	 * Setter and getter dryrun member
+	 *
+	 * @covers BuliBot::setDryrun
+	 * @covers BuliBot::getDryrun
+	 */
+	public function testSetterAndGetterDryrun() {
+		$dr = true;
+
+		$this->buliBot->setDryrun($dr);
+		$this->assertEquals($dr, $this->buliBot->getDryrun());
+	}
+
 	public function testJustAGetAndConvertTest() {
 		$cacheId = 'test123';
 		$cache = $this->buliBot->getCache();
