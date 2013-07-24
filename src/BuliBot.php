@@ -61,6 +61,13 @@ class BuliBot {
 	private $matches = array();
 
 	/**
+	 * Score calculator instance
+	 *
+	 * @var ScoreCalculator
+	 */
+	private $scoreCalculator = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param array $config
@@ -91,6 +98,24 @@ class BuliBot {
 	 */
 	public function getConfig() {
 		return $this->config;
+	}
+
+	/**
+	 * Set ScoreCalculator
+	 *
+	 * @param ScoreCalcualtor $obj
+	 */
+	public function setScoreCalculator(ScoreCalculator $obj) {
+		$this->scoreCalculator = $obj;
+	}
+
+	/**
+	 * Get ScoreCalculator
+	 *
+	 * @return ScoreCalculator
+	 */
+	public function getScoreCalculator() {
+		return $this->scoreCalculator;
 	}
 
 	/**
@@ -185,6 +210,7 @@ class BuliBot {
 	 * Get matches by playday
 	 *
 	 * @param int $pd
+	 * @return array
 	 */
 	public function getMatchesByPlayday($pd) {
 		// Get string from config
@@ -196,8 +222,53 @@ class BuliBot {
 		);
 		$urlString = $this->urlStringReplacer($urlKey, $values);
 		$matches = $this->getOpenligaDataByUrl($urlString);
-		Zend_Debug::dump($matches);
+//		Zend_Debug::dump($matches);
 		$this->matches = $matches;
+
+		return $this->matches;
+	}
+
+	/**
+	 * Guess result of match by match id
+	 *
+	 * @param int $matchId
+	 * @return array
+	 */
+	public function guessResultOfMatchByMatchId($matchId) {
+		$result = array();
+
+		// Get team1 and team2 of from matches
+		$teamId1 = 0;
+		$teamId2 = 0;
+		foreach ($this->matches['matchdata'] as $match) {
+			if ($match['match_id'] === $matchId) {
+//				Zend_Debug::dump($match);
+				// Reset statistic data
+				$this->scoreCalculator->resetStatisticData();
+
+				// Set team ids
+				$teamId1 = $match['id_team1'];
+				$teamId2 = $match['id_team2'];
+				$this->scoreCalculator->setTeamId1($teamId1);
+				$this->scoreCalculator->setTeamId2($teamId2);
+
+				// Get all matches between team1 and team2
+				$urlKey = 'compare_team1_with_team2_url';
+				$values = array(
+					'{T1}' => $teamId1,
+					'{T2}' => $teamId2
+				);
+				$urlString = $this->urlStringReplacer($urlKey, $values);
+				$data = $this->getOpenligaDataByUrl($urlString);
+				$this->scoreCalculator->setMatchData($data);
+
+				// Generate statistic data
+				$stats = $this->scoreCalculator->generateStatisticData();
+				Zend_Debug::dump($stats);
+			}
+		}
+
+		return $result;
 	}
 
 }

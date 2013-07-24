@@ -43,6 +43,16 @@ if (!empty($dr)) {
 	$buliBot->setDryrun($dr);
 }
 
+// Set ScoreCalculator
+$buliBot->setScoreCalculator(new ScoreCalculator($config));
+
 // Get matches by playday
-$buliBot->getMatchesByPlayday($pd);
+$matches = $buliBot->getMatchesByPlayday($pd);
+
+// Walk thru matches and guess result
+foreach ($matches['matchdata'] as $match) {
+	//Zend_Debug::dump($match);
+	$buliBot->guessResultOfMatchByMatchId($match['match_id']);
+//	break;
+}
 ?>

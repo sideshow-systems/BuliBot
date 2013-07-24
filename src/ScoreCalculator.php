@@ -13,6 +13,7 @@ class ScoreCalculator extends BuliBot {
 	const KEYS_POINTS = 'points';
 	const KEYS_GAMES = 'gamescnt';
 	const KEYS_GOALES = 'goales';
+	const KEYS_TEAMNAME = 'teamname';
 
 	/**
 	 * Team id of team 1
@@ -137,7 +138,16 @@ class ScoreCalculator extends BuliBot {
 	}
 
 	/**
+	 * Reset statistic data
+	 */
+	public function resetStatisticData() {
+		$this->statData = array();
+	}
+
+	/**
 	 * Generate statistic data
+	 *
+	 * @return array statistic data
 	 */
 	public function generateStatisticData() {
 		if (empty($this->matchdata)) {
@@ -158,6 +168,8 @@ class ScoreCalculator extends BuliBot {
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GAMES, 0);
 		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_GOALES, 0);
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GOALES, 0);
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TEAMNAME, '');
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TEAMNAME, '');
 
 //		Zend_Debug::dump($this->matchdata);
 		$matchdata = $this->matchdata['matchdata'];
@@ -175,6 +187,10 @@ class ScoreCalculator extends BuliBot {
 						$teamId1Key = 2;
 						$teamId2Key = 1;
 					}
+
+					// Set team name
+					$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TEAMNAME, $match['name_team' . $teamId1Key]);
+					$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TEAMNAME, $match['name_team' . $teamId2Key]);
 
 					// Increase games count
 					$gamesCnt++;
@@ -225,6 +241,7 @@ class ScoreCalculator extends BuliBot {
 		}
 
 //		Zend_Debug::dump($this->getStatisticData());
+		return $this->getStatisticData();
 	}
 
 }
