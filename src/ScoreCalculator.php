@@ -14,6 +14,7 @@ class ScoreCalculator extends BuliBot {
 	const KEYS_GAMES = 'gamescnt';
 	const KEYS_GOALES = 'goales';
 	const KEYS_TEAMNAME = 'teamname';
+	const KEYS_AVERAGEGOALS = 'averagegoals';
 
 	/**
 	 * Team id of team 1
@@ -170,6 +171,8 @@ class ScoreCalculator extends BuliBot {
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GOALES, 0);
 		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TEAMNAME, '');
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TEAMNAME, '');
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_AVERAGEGOALS, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_AVERAGEGOALS, 0);
 
 //		Zend_Debug::dump($this->matchdata);
 		$matchdata = $this->matchdata['matchdata'];
@@ -239,6 +242,22 @@ class ScoreCalculator extends BuliBot {
 				}
 			}
 		}
+
+		// Get goals and calculate average goals
+		$averageGoalsTeam1 = 0;
+		$goalsCntTeamId1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_GOALES);
+		if ($goalsCntTeamId1 !== 0) {
+			$averageGoalsTeam1 = round($goalsCntTeamId1 / $gamesCnt);
+		}
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_AVERAGEGOALS, $averageGoalsTeam1);
+
+		$averageGoalsTeam2 = 0;
+		$goalsCntTeamId2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_GOALES);
+		if ($goalsCntTeamId2 !== 0) {
+			$averageGoalsTeam2 = round($goalsCntTeamId2 / $gamesCnt);
+		}
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_AVERAGEGOALS, $averageGoalsTeam2);
+
 
 //		Zend_Debug::dump($this->getStatisticData());
 		return $this->getStatisticData();

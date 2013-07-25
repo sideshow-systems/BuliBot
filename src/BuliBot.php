@@ -44,14 +44,14 @@ class BuliBot {
 	 *
 	 * @var string
 	 */
-	private $blKey = 'bl1';
+	private $blKey = '';
 
 	/**
 	 * Season
 	 *
 	 * @var int
 	 */
-	private $season = 2013;
+	private $season = 0;
 
 	/**
 	 * Matches
@@ -74,6 +74,10 @@ class BuliBot {
 	 */
 	public function __construct($config) {
 		$this->config = $config;
+
+		// Set some config values
+		$this->blKey = $config['blkey'];
+		$this->season = $config['current_season_id'];
 
 		// Setup cache
 		$this->setupCache();
