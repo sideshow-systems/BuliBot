@@ -6,6 +6,7 @@
  * @author Florian Binder <florian.binder@mp-muenchen.de>
  */
 class ScoreCalculator extends BuliBot {
+	// Statistic keys
 
 	const KEYS_VICTORIES = 'victories';
 	const KEYS_DEFEATS = 'defeats';
@@ -15,6 +16,13 @@ class ScoreCalculator extends BuliBot {
 	const KEYS_GOALES = 'goales';
 	const KEYS_TEAMNAME = 'teamname';
 	const KEYS_AVERAGEGOALS = 'averagegoals';
+	const KEYS_CPOINTS = 'cpoints';
+
+	// Calculation keys
+	const CKEYS_GOAL = 0.2;
+	const CKEYS_VICTORIES = 0.3;
+	const CKEYS_TIES = 0.1;
+	const CKEYS_DEFEATS = -0.1;
 
 	/**
 	 * Team id of team 1
@@ -173,6 +181,8 @@ class ScoreCalculator extends BuliBot {
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TEAMNAME, '');
 		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_AVERAGEGOALS, 0);
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_AVERAGEGOALS, 0);
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_CPOINTS, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_CPOINTS, 0);
 
 //		Zend_Debug::dump($this->matchdata);
 		$matchdata = $this->matchdata['matchdata'];
@@ -190,6 +200,10 @@ class ScoreCalculator extends BuliBot {
 						$teamId1Key = 2;
 						$teamId2Key = 1;
 					}
+
+					// Cpoints
+					$cPointsTeamId1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_CPOINTS);
+					$cPointsTeamId2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_CPOINTS);
 
 					// Set team name
 					$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TEAMNAME, $match['name_team' . $teamId1Key]);
@@ -215,16 +229,28 @@ class ScoreCalculator extends BuliBot {
 						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_VICTORIES, $cntVictoriesTeam1);
 						$cntDefeatsTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_DEFEATS) + 1;
 						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_DEFEATS, $cntDefeatsTeam2);
+
+						// Set cpoints
+						$cPointsTeamId1 += ScoreCalculator::CKEYS_VICTORIES;
+						$cPointsTeamId2 += ScoreCalculator::CKEYS_DEFEATS;
 					} else if ($matchPointsTeam1 < $matchPointsTeam2) {
 						$cntVictoriesTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_VICTORIES) + 1;
 						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_VICTORIES, $cntVictoriesTeam2);
 						$cntDefeatsTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_DEFEATS) + 1;
 						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_DEFEATS, $cntDefeatsTeam1);
+
+						// Set cpoints
+						$cPointsTeamId1 += ScoreCalculator::CKEYS_DEFEATS;
+						$cPointsTeamId2 += ScoreCalculator::CKEYS_VICTORIES;
 					} else if ($matchPointsTeam1 == $matchPointsTeam2) {
 						$cntTiesTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_TIES) + 1;
 						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_TIES, $cntTiesTeam1);
 						$cntTiesTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_TIES) + 1;
 						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_TIES, $cntTiesTeam2);
+
+						// Set cpoints
+						$cPointsTeamId1 += ScoreCalculator::CKEYS_TIES;
+						$cPointsTeamId2 += ScoreCalculator::CKEYS_TIES;
 					}
 
 					// Count goales
@@ -235,9 +261,15 @@ class ScoreCalculator extends BuliBot {
 						$cntGoalsTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_GOALES) + $matchGoalsTeam1;
 						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_GOALES, $cntGoalsTeam1);
 
+						// Set cpoints
+						$cPointsTeamId1 += $matchGoalsTeam1 * ScoreCalculator::CKEYS_GOAL;
+
 						$matchGoalsTeam2 = $result['points_team' . $teamId2Key];
 						$cntGoalsTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_GOALES) + $matchGoalsTeam2;
 						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GOALES, $cntGoalsTeam2);
+
+						// Set cpoints
+						$cPointsTeamId2 += $matchGoalsTeam2 * ScoreCalculator::CKEYS_GOAL;
 					}
 				}
 			}
@@ -258,6 +290,9 @@ class ScoreCalculator extends BuliBot {
 		}
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_AVERAGEGOALS, $averageGoalsTeam2);
 
+		// Set cpoints to statistic data
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_CPOINTS, $cPointsTeamId1);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_CPOINTS, $cPointsTeamId2);
 
 //		Zend_Debug::dump($this->getStatisticData());
 		return $this->getStatisticData();
