@@ -20,10 +20,10 @@ $_SERVER['config'] = $config;
 // Get options from command line
 try {
 	$opts = new Zend_Console_Getopt(
-		array(
+			array(
 		'playday|p=i' => 'Playday',
 		'dryrun|d' => 'Dryrun'
-		)
+			)
 	);
 	$opts->parse();
 } catch (Zend_Console_Getopt_Exception $e) {
@@ -52,7 +52,21 @@ $matches = $buliBot->getMatchesByPlayday($pd);
 // Walk thru matches and guess result
 foreach ($matches['matchdata'] as $match) {
 	//Zend_Debug::dump($match);
-	$buliBot->guessResultOfMatchByMatchId($match['match_id']);
+	$data = $buliBot->guessResultOfMatchByMatchId($match['match_id']);
+
+	// Just show results in shell
+	if (!empty($data)) {
+		$keys = array_keys($data);
+		$resultString = '(' . $keys[0] . ') ' . $data[$keys[0]]['teamname'] . ' == ' . $data[$keys[0]]['guessgoals'] . ':';
+		$resultString .= $data[$keys[1]]['guessgoals'] . ' == ' . $data[$keys[1]]['teamname'] . ' (' . $keys[1] . ')';
+		echo $resultString . PHP_EOL;
+
+		// Submit data
+		$buliBot->submitData($data);
+
+//		Zend_Debug::dump($data);
+	}
+
 //	break;
 }
 ?>

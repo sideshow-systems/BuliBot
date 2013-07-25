@@ -14,6 +14,7 @@ class ScoreCalculator extends BuliBot {
 	const KEYS_POINTS = 'points';
 	const KEYS_GAMES = 'gamescnt';
 	const KEYS_GOALES = 'goales';
+	const KEYS_GUESSGOALS = 'guessgoals';
 	const KEYS_TEAMNAME = 'teamname';
 	const KEYS_AVERAGEGOALS = 'averagegoals';
 	const KEYS_CPOINTS = 'cpoints';
@@ -183,6 +184,8 @@ class ScoreCalculator extends BuliBot {
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_AVERAGEGOALS, 0);
 		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_CPOINTS, 0);
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_CPOINTS, 0);
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_GUESSGOALS, 0);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GUESSGOALS, 0);
 
 //		Zend_Debug::dump($this->matchdata);
 		$matchdata = $this->matchdata['matchdata'];
@@ -261,21 +264,23 @@ class ScoreCalculator extends BuliBot {
 						$cntGoalsTeam1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_GOALES) + $matchGoalsTeam1;
 						$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_GOALES, $cntGoalsTeam1);
 
+						// Do not track cpoints for goals!
 						// Set cpoints
-						$cPointsTeamId1 += $matchGoalsTeam1 * ScoreCalculator::CKEYS_GOAL;
+						//$cPointsTeamId1 += $matchGoalsTeam1 * ScoreCalculator::CKEYS_GOAL;
 
 						$matchGoalsTeam2 = $result['points_team' . $teamId2Key];
 						$cntGoalsTeam2 = $this->getStatisticDataByTeamIdAndKey($this->teamId2, ScoreCalculator::KEYS_GOALES) + $matchGoalsTeam2;
 						$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GOALES, $cntGoalsTeam2);
 
 						// Set cpoints
-						$cPointsTeamId2 += $matchGoalsTeam2 * ScoreCalculator::CKEYS_GOAL;
+						//$cPointsTeamId2 += $matchGoalsTeam2 * ScoreCalculator::CKEYS_GOAL;
 					}
 				}
 			}
 		}
 
 		// Get goals and calculate average goals
+		// This is not working because of shitty data!
 		$averageGoalsTeam1 = 0;
 		$goalsCntTeamId1 = $this->getStatisticDataByTeamIdAndKey($this->teamId1, ScoreCalculator::KEYS_GOALES);
 		if ($goalsCntTeamId1 !== 0) {
@@ -293,6 +298,18 @@ class ScoreCalculator extends BuliBot {
 		// Set cpoints to statistic data
 		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_CPOINTS, $cPointsTeamId1);
 		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_CPOINTS, $cPointsTeamId2);
+
+		// TODO: We have to adjust these values!
+		$teamId1MinAndMax = array(5, 10);
+		$teamId2MinAndMax = array(5, 10);
+
+		// Try to guess result
+		$cPointsTeamId1 = ($cPointsTeamId1 < 0) ? ($cPointsTeamId1 * -1) : $cPointsTeamId1;
+		$cPointsTeamId2 = ($cPointsTeamId2 < 0) ? ($cPointsTeamId2 * -1) : $cPointsTeamId2;
+		$guessGoalsTeamId1 = round($cPointsTeamId1 * mt_rand($teamId1MinAndMax[0], $teamId1MinAndMax[1]));
+		$guessGoalsTeamId2 = round($cPointsTeamId2 * mt_rand($teamId2MinAndMax[0], $teamId2MinAndMax[1]));
+		$this->setStatisticData($this->teamId1, ScoreCalculator::KEYS_GUESSGOALS, $guessGoalsTeamId1);
+		$this->setStatisticData($this->teamId2, ScoreCalculator::KEYS_GUESSGOALS, $guessGoalsTeamId2);
 
 //		Zend_Debug::dump($this->getStatisticData());
 		return $this->getStatisticData();

@@ -267,12 +267,34 @@ class BuliBot {
 				$this->scoreCalculator->setMatchData($data);
 
 				// Generate statistic data
-				$stats = $this->scoreCalculator->generateStatisticData();
-				Zend_Debug::dump($stats);
+				$result = $this->scoreCalculator->generateStatisticData();
+//				Zend_Debug::dump($stats);
 			}
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Submit data to botliga
+	 *
+	 * @param array $data
+	 */
+	public function submitData($data) {
+		if (!$this->dryrun) {
+			Zend_Debug::dump($data);
+
+			// Init client
+			$url = 'http://botliga.de/api/guess';
+			$client = new Zend_Http_Client($url);
+
+			// Set params
+			$client->setParameterPost(array(
+				'match_id' => 0,
+				'token' => $this->config['botliga_api_key'],
+				'result' => ''
+			));
+		}
 	}
 
 }
