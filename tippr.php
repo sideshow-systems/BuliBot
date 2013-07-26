@@ -20,10 +20,10 @@ $_SERVER['config'] = $config;
 // Get options from command line
 try {
 	$opts = new Zend_Console_Getopt(
-			array(
+		array(
 		'playday|p=i' => 'Playday',
 		'dryrun|d' => 'Dryrun'
-			)
+		)
 	);
 	$opts->parse();
 } catch (Zend_Console_Getopt_Exception $e) {
@@ -62,7 +62,7 @@ foreach ($matches['matchdata'] as $match) {
 		echo $resultString . PHP_EOL;
 
 		// Submit data
-		$buliBot->submitData($data);
+		$buliBot->submitData($match['match_id'], $data);
 
 //		Zend_Debug::dump($data);
 	}

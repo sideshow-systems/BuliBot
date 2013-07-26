@@ -278,11 +278,16 @@ class BuliBot {
 	/**
 	 * Submit data to botliga
 	 *
+	 * @param int $matchId
 	 * @param array $data
 	 */
-	public function submitData($data) {
+	public function submitData($matchId, $data) {
 		if (!$this->dryrun) {
-			Zend_Debug::dump($data);
+//			Zend_Debug::dump($data);
+			// Get goals
+			$keys = array_keys($data);
+			$goalsTeam1 = $data[$keys[0]]['guessgoals'];
+			$goalsTeam2 = $data[$keys[1]]['guessgoals'];
 
 			// Init client
 			$url = 'http://botliga.de/api/guess';
@@ -290,10 +295,12 @@ class BuliBot {
 
 			// Set params
 			$client->setParameterPost(array(
-				'match_id' => 0,
+				'match_id' => $matchId,
 				'token' => $this->config['botliga_api_key'],
-				'result' => ''
+				'result' => $goalsTeam1 . ':' . $goalsTeam2
 			));
+			$response = $client->request('POST');
+//			Zend_Debug::dump($response);
 		}
 	}
 
