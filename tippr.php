@@ -21,8 +21,9 @@ $_SERVER['config'] = $config;
 try {
 	$opts = new Zend_Console_Getopt(
 		array(
-		'playday|p=i' => 'Playday',
-		'dryrun|d' => 'Dryrun'
+		'playday|p-i' => 'Playday',
+		'dryrun|d' => 'Dryrun',
+		'test|t-i' => 'Test'
 		)
 	);
 	$opts->parse();
@@ -33,6 +34,7 @@ try {
 //Zend_Debug::dump($opts);
 $pd = $opts->getOption('p');
 $dr = $opts->getOption('d');
+$test = $opts->getOption('t');
 
 // BuliBot instance
 $buliBot = new BuliBot($config);
@@ -47,26 +49,35 @@ if (!empty($dr)) {
 $buliBot->setScoreCalculator(new ScoreCalculator($config));
 
 // Get matches by playday
-$matches = $buliBot->getMatchesByPlayday($pd);
+if (!empty($pd) && is_int($pd)) {
+	$matches = $buliBot->getMatchesByPlayday($pd);
 
-// Walk thru matches and guess result
-foreach ($matches['matchdata'] as $match) {
-	//Zend_Debug::dump($match);
-	$data = $buliBot->guessResultOfMatchByMatchId($match['match_id']);
+	// Walk thru matches and guess result
+	foreach ($matches['matchdata'] as $match) {
+		//Zend_Debug::dump($match);
+		$data = $buliBot->guessResultOfMatchByMatchId($match['match_id']);
 
-	// Just show results in shell
-	if (!empty($data)) {
-		$keys = array_keys($data);
-		$resultString = '(' . $keys[0] . ') ' . $data[$keys[0]]['teamname'] . ' == ' . $data[$keys[0]]['guessgoals'] . ':';
-		$resultString .= $data[$keys[1]]['guessgoals'] . ' == ' . $data[$keys[1]]['teamname'] . ' (' . $keys[1] . ')';
-		echo $resultString . PHP_EOL;
+		// Just show results in shell
+		if (!empty($data)) {
+			$keys = array_keys($data);
+			$resultString = '(' . $keys[0] . ') ' . $data[$keys[0]]['teamname'] . ' == ' . $data[$keys[0]]['guessgoals'] . ':';
+			$resultString .= $data[$keys[1]]['guessgoals'] . ' == ' . $data[$keys[1]]['teamname'] . ' (' . $keys[1] . ')';
+			echo $resultString . PHP_EOL;
 
-		// Submit data
-		$buliBot->submitData($match['match_id'], $data);
+			// Submit data
+			$buliBot->submitData($match['match_id'], $data);
 
 //		Zend_Debug::dump($data);
-	}
+		}
 
 //	break;
+	}
+}
+
+// Test
+if (!empty($test)) {
+	echo "==== TEST ====" . PHP_EOL;
+	$data = $buliBot->guessResultOfMatchByMatchId($test);
+	Zend_Debug::dump($data);
 }
 ?>
