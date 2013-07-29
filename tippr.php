@@ -49,7 +49,14 @@ if (!empty($dr)) {
 $buliBot->setScoreCalculator(new ScoreCalculator($config));
 
 // Get matches by playday
-if (!empty($pd) && is_int($pd)) {
+if (!empty($pd)) {
+	echo "==== Get results ====" . PHP_EOL;
+	if (!empty($dr)) {
+		echo "************" . PHP_EOL;
+		echo "** DRYRUN **" . PHP_EOL;
+		echo "************" . PHP_EOL;
+	}
+	echo "" . PHP_EOL;
 	$matches = $buliBot->getMatchesByPlayday($pd);
 
 	// Walk thru matches and guess result
