@@ -22,6 +22,7 @@ try {
 	$opts = new Zend_Console_Getopt(
 		array(
 		'playday|p-i' => 'Playday',
+		'season|s-i' => 'Season',
 		'dryrun|d' => 'Dryrun',
 		'test|t-i' => 'Test'
 		)
@@ -33,6 +34,7 @@ try {
 }
 //Zend_Debug::dump($opts);
 $pd = $opts->getOption('p');
+$season = $opts->getOption('s');
 $dr = $opts->getOption('d');
 $test = $opts->getOption('t');
 
@@ -43,6 +45,10 @@ $buliBot = new BuliBot($config);
 $buliBot->setPlayday($pd);
 if (!empty($dr)) {
 	$buliBot->setDryrun($dr);
+}
+
+if (!empty($season)) {
+	$buliBot->setSeason($season);
 }
 
 // Set ScoreCalculator

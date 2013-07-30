@@ -150,6 +150,24 @@ class BuliBot {
 	}
 
 	/**
+	 * Set season
+	 *
+	 * @param int $season
+	 */
+	public function setSeason($season) {
+		$this->season = $season;
+	}
+
+	/**
+	 * Get season
+	 *
+	 * @return int
+	 */
+	public function getSeasons() {
+		return $this->season;
+	}
+
+	/**
 	 * Set dryrun
 	 *
 	 * @param bool $dr
